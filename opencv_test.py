@@ -63,12 +63,6 @@ class NewRemoveBg(RemoveBg):  # 메소드 오버라이드
     def remove_background_from_img_file(
         self, img_file_path, size="regular", bg_color=None
     ):
-        """
-        Removes the background given an image file and outputs the file as the original file name with "no_bg.png"
-        appended to it.
-        :param img_file_path: the path to the image file
-        :param size: the size of the output image (regular = 0.25 MP, hd = 4 MP, 4k = up to 10 MP)
-        """
         # Open image file to send information post request and send the post request
         img_file = open(img_file_path, "rb")
         response = requests.post(
@@ -78,11 +72,10 @@ class NewRemoveBg(RemoveBg):  # 메소드 오버라이드
             headers={"X-Api-Key": self.__api_key},
         )
         response.raise_for_status()
-        self.__output_file__(response, "output/output1.png")  # 출력 파일 이름 변경
+        self.__output_file__(response, img_file.name + "_removebg.png")  # 출력 파일 이름 변경
 
-        # Close original file
         img_file.close()
 
 
 rmbg = NewRemoveBg("eihrhcx6ZmqHYx69CZna8mHa", "error.log")
-rmbg.remove_background_from_img_file("input/resize1.jpg")
+rmbg.remove_background_from_img_file("media/good.png")
