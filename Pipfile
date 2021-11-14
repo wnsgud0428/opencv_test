@@ -9,6 +9,7 @@ matplotlib = "*"
 numpy = "*"
 requests = "*"
 removebg = "*"
+scipy = "*"
 
 [dev-packages]
 black = "*"
