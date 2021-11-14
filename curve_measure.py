@@ -1,6 +1,6 @@
 import cv2
 
-image = cv2.imread("media/good.png_removebg.png")
+image = cv2.imread("media/wrong-crop.jpg_removebg.png")
 
 # contour 그리기
 image1_gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
@@ -15,7 +15,7 @@ shoulder_y = 250
 hip_x = 250
 hip_y = 400
 cut = image[shoulder_y:hip_y, shoulder_x:hip_x]
-cv2.imshow("cut", cut)
+# cv2.imshow("cut", cut)
 
 # 보여주는 부분
 cv2.imshow("output_image", output_image)
