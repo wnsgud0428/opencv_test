@@ -2,7 +2,7 @@ import cv2
 import numpy
 from scipy.interpolate import splprep, splev
 
-image = cv2.imread("media/wrong-crop.jpg_removebg.png")
+image = cv2.imread("media/testimage.png")
 
 # contour 그리기
 image1_gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
