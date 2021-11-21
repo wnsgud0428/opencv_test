@@ -77,5 +77,5 @@ class NewRemoveBg(RemoveBg):  # 메소드 오버라이드
         img_file.close()
 
 
-rmbg = NewRemoveBg("eihrhcx6ZmqHYx69CZna8mHa", "error.log")
-rmbg.remove_background_from_img_file("media/wrong-crop.jpg")
+rmbg = NewRemoveBg("iH4AoLSs2an9EiS8LPSiqAqp", "error.log")
+rmbg.remove_background_from_img_file("images/resize_wrong2.jpg")
