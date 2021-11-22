@@ -3,6 +3,7 @@ import numpy
 from scipy.interpolate import splprep, splev
 
 image = cv2.imread("images/resize_wrong2.jpg_removebg.png")
+image = cv2.resize(image, dsize=(640, 480), interpolation=cv2.INTER_AREA)
 # good-crop.jpg_removebg.png
 # wrong-crop.jpg_removebg.png
 # contour 그리기
@@ -13,14 +14,6 @@ contours, hierarcy = cv2.findContours(
 output_image = cv2.drawContours(image, contours, -1, (0, 255, 0), 2)
 cv2.imshow("output_image", output_image)
 cv2.waitKey(0)
-
-left_shoulder_x = 347
-left_shoulder_y = 100
-left_hip_x = 512
-left_hip_y = 263
-left_shoulder = (left_shoulder_x, left_shoulder_y)
-left_hip = (left_hip_x, left_hip_y)
-
 
 smoothened = []
 for contour in contours:
@@ -38,6 +31,10 @@ for contour in contours:
     res_array = [[[int(i[0]), int(i[1])]] for i in zip(x_new, y_new)]
     smoothened.append(numpy.asarray(res_array, dtype=numpy.int32))
 cv2.drawContours(image, smoothened, -1, (255, 255, 255), 2)
+
+left_shoulder = (347, 100)
+left_hip = (512, 263)
+
 cv2.line(
     image,
     left_shoulder,
@@ -48,10 +45,9 @@ cv2.line(
     shift=None,
 )
 
-# print(smoothened)
 print(smoothened)
-c1 = max(smoothened, key=cv2.contourArea)
-print(c1)
+# c1 = max(smoothened, key=cv2.contourArea)
+# print(c1)
 
 # 보여주는 부분
 cv2.imshow("output_image", output_image)
