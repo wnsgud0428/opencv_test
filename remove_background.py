@@ -78,4 +78,4 @@ class NewRemoveBg(RemoveBg):  # 메소드 오버라이드
 
 
 rmbg = NewRemoveBg("iH4AoLSs2an9EiS8LPSiqAqp", "error.log")
-rmbg.remove_background_from_img_file("images/resize_wrong2.jpg")
+rmbg.remove_background_from_img_file("images/resize_good2.jpg")
