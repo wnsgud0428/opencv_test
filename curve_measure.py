@@ -1,10 +1,42 @@
 import cv2
 import numpy
 from scipy.interpolate import splprep, splev
-import matplotlib.pylab as pl
+import matplotlib.pylab as pl  # 지금은 안씀
+
+"""
+<to do>
+지금 문제점: 등 위의 점 vs 어깨-골반 직선의 기울기 비교는 별로 좋지 않은듯. 
+해결 방법: 자체적인 등 위의 점들의 기울기 변화량을 가지고 측정해야 될듯.
+
+"""
 
 
-image_input_type = "wrong"
+def returnLineEquCoef(p1, p2):
+    """[기울기m, y절편] 리턴"""
+    x1 = p1[0]
+    x2 = p2[0]
+    y1 = p1[1]
+    y2 = p2[1]
+    if x2 != x1:
+        m = (y2 - y1) / (x2 - x1)  # 기울기 m 계산(a값)
+        n = y1 - (m * x1)  # y 절편 계산(b값)
+    return [m, n]
+
+
+def isPointUnderTheLine(line_equ_coef, point):
+    """점이 직선의 밑에있는지 따져 T/F 리턴"""
+    m = line_equ_coef[0]
+    n = line_equ_coef[1]
+    x1 = point[0]
+    y1 = point[1]
+    result = m * x1 + n - y1
+    if result > 0:
+        return True
+    else:
+        return False
+
+
+image_input_type = "good"
 image = cv2.imread("images/resize_" + image_input_type + "2.jpg_removebg.png")
 image = cv2.resize(image, dsize=(640, 480), interpolation=cv2.INTER_AREA)
 
@@ -74,31 +106,8 @@ cv2.line(
 )
 
 
-def returnLineEquCoef(p1, p2):
-    x1 = p1[0]
-    x2 = p2[0]
-    y1 = p1[1]
-    y2 = p2[1]
-    if x2 != x1:
-        m = (y2 - y1) / (x2 - x1)  # 기울기 m 계산(a값)
-        n = y1 - (m * x1)  # y 절편 계산(b값)
-    return [m, n]
-
-
 line_equ_coef = returnLineEquCoef(left_shoulder, left_hip)
 print(line_equ_coef)
-
-
-def isPointUnderTheLine(line_equ_coef, point):
-    m = line_equ_coef[0]
-    n = line_equ_coef[1]
-    x1 = point[0]
-    y1 = point[1]
-    result = m * x1 + n - y1
-    if result > 0:
-        return True
-    else:
-        return False
 
 
 want_point_list = []
@@ -127,7 +136,27 @@ print(want_point_list)
 #         shift=None,
 #     )
 
-for i in range(len(want_point_list)):
+slope_diff_sum = 0
+shoulder_to_hip_slope = returnLineEquCoef(left_shoulder, left_hip)[0]
+print("shoulder_to_hip_slope:", shoulder_to_hip_slope)
+want_point_list_len = len(want_point_list)
+want_point_list.reverse()  # 어깨에 있는 점을 먼저 list에  저장하기 위함
+
+# for i in range(want_point_list_len):
+#     # 파란색으로 등에있는 점 찍기
+#     cv2.line(
+#         image,
+#         want_point_list[i],
+#         want_point_list[i],
+#         (255, 0, 0),
+#         thickness=3,
+#         lineType=None,
+#         shift=None,
+#     )
+# print(want_point_list_len)
+
+for i in range(5):
+    # 파란색으로 등에있는 점 찍기
     cv2.line(
         image,
         want_point_list[i],
@@ -138,20 +167,13 @@ for i in range(len(want_point_list)):
         shift=None,
     )
 
-# cv2.line(
-#     image,
-#     (344,65),
-#     (291,24),
-#     (255, 255, 255),
-#     thickness=None,
-#     lineType=None,
-#     shift=None,
-# )
-
-
-# print(smoothened)
-# c1 = max(smoothened, key=cv2.contourArea)
-# print(c1)
+    if i < 4:
+        coef = returnLineEquCoef(want_point_list[i], want_point_list[i + 1])
+        back_point_slope = coef[0]
+        slope_diff = abs(shoulder_to_hip_slope - back_point_slope)
+        print(slope_diff)
+        slope_diff_sum += slope_diff
+print("slope_diff_sum:", slope_diff_sum)
 
 # 보여주는 부분
 cv2.imshow("output_image", output_image)
